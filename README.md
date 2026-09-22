@@ -1,0 +1,1 @@
+# infografico-praticas-de-consumo-identidade-e-exclusao-

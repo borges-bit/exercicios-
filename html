@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consumo, Identidade & Exclusão</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d1a;
+    --v1: #ff6b6b; --v2: #ffd93d; --v3: #6bcb77;
+    --v4: #4d96ff; --v5: #ff922b; --v6: #cc5de8;
+    --cream: #f0eaff; --muted: #8888aa;
+    --border: rgba(255,255,255,0.1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--cream); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; }
+  .page { max-width: 880px; margin: 0 auto; padding: 48px 32px; }
+  .header { display: grid; grid-template-columns: 1fr auto; align-items: start; gap: 24px; border-bottom: 2px solid var(--border); padding-bottom: 28px; margin-bottom: 36px; }
+  .header-label { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--v4); margin-bottom: 8px; }
+  .header-title { font-family: 'Playfair Display', serif; font-size: 52px; font-weight: 900; line-height: 1.0; }
+  .header-title .c1 { color: var(--v1); } .header-title .c2 { color: var(--v3); font-style: italic; } .header-title .c3 { color: var(--v4); }
+  .names-box { background: linear-gradient(135deg,#1a0a2e,#0a1a2e); border: 1.5px solid var(--v6); border-radius: 4px; padding: 16px 20px; min-width: 220px; }
+  .names-title { font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--v6); margin-bottom: 10px; }
+  .name-item { display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 500; color: #ddd; padding: 3px 0; }
+  .name-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .intro { background: linear-gradient(135deg,#1a0a3a,#0a1a3a); border-left: 4px solid var(--v1); padding: 26px 32px; margin-bottom: 36px; position: relative; overflow: hidden; }
+  .intro::before { content: '"'; font-family: 'Playfair Display',serif; font-size: 140px; color: var(--v1); position: absolute; top:-20px; left:14px; opacity:.15; }
+  .intro p { font-family: 'Playfair Display',serif; font-size: 18px; font-style: italic; line-height: 1.6; padding-left: 16px; color: #e8e0ff; }
+  .section-header { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+  .section-header h2 { font-family: 'Playfair Display',serif; font-size: 20px; font-weight: 700; white-space: nowrap; color: #fff; }
+  .section-line { flex: 1; height: 1px; background: var(--border); }
+  .section-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+  .ccard { padding: 22px; border: 1.5px solid; border-radius: 2px; position: relative; overflow: hidden; }
+  .ccard::after { content:''; position:absolute; top:0; right:0; width:60px; height:60px; border-radius:0 0 0 60px; opacity:.12; }
+  .cc1 { background:#0d0626; border-color:var(--v1); } .cc1::after { background:var(--v1); }
+  .cc2 { background:#060d26; border-color:var(--v4); } .cc2::after { background:var(--v4); }
+  .cc3 { background:#060d1a; border-color:var(--v3); } .cc3::after { background:var(--v3); }
+  .ctag { display:inline-block; font-size:9.5px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; padding:2px 8px; border-radius:2px; margin-bottom:10px; }
+  .ctag1{background:rgba(255,107,107,.2);color:var(--v1)} .ctag2{background:rgba(77,150,255,.2);color:var(--v4)}
+  .ctag3{background:rgba(107,203,119,.2);color:var(--v3)} .ctag4{background:rgba(255,146,43,.2);color:var(--v5)}
+  .ctag5{background:rgba(204,93,232,.2);color:var(--v6)} .ctag6{background:rgba(255,217,61,.2);color:var(--v2)}
+  .ccard-title { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; margin-bottom:8px; color:#fff; }
+  .ccard-body { font-size:13px; line-height:1.65; color:#b0b0cc; }
+  .stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:28px; }
+  .stat-cell { background:linear-gradient(160deg,#12081e,#08121e); border:1.5px solid var(--border); padding:24px 18px; text-align:center; }
+  .stat-num { font-family:'Playfair Display',serif; font-size:48px; font-weight:900; line-height:1; margin-bottom:4px; }
+  .stat-label { font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; margin-bottom:8px; }
+  .stat-desc { font-size:12.5px; color:#9090aa; line-height:1.5; }
+  .pyramid-wrap { background:linear-gradient(135deg,#0a0a1e,#0a1a0a); border:1.5px solid var(--border); padding:32px; margin-bottom:28px; }
+  .pyramid-title { font-family:'Playfair Display',serif; font-size:17px; font-style:italic; color:var(--v2); margin-bottom:24px; text-align:center; }
+  .pyramid { display:flex; flex-direction:column; align-items:center; gap:7px; }
+  .pyramid-row { display:flex; align-items:center; gap:14px; width:100%; justify-content:center; }
+  .pyramid-bar { height:44px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; color:#fff; padding:0 14px; text-align:center; flex-shrink:0; }
+  .pb1{width:155px;background:var(--v1)} .pb2{width:255px;background:var(--v6)}
+  .pb3{width:360px;background:var(--v4)} .pb4{width:460px;background:var(--v3)}
+  .pyramid-label { font-size:12px; width:135px; text-align:left; flex-shrink:0; }
+  .cycle { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:28px; }
+  .cycle-step { padding:20px 14px; border:1.5px solid; border-radius:2px; }
+  .cs1{background:#160814;border-color:var(--v1)} .cs2{background:#080c1e;border-color:var(--v4)}
+  .cs3{background:#0e1808;border-color:var(--v3)} .cs4{background:#1a0e00;border-color:var(--v5)}
+  .cycle-num { font-family:'Playfair Display',serif; font-size:30px; font-weight:900; opacity:.3; line-height:1; }
+  .cn1{color:var(--v1)} .cn2{color:var(--v4)} .cn3{color:var(--v3)} .cn4{color:var(--v5)}
+  .cycle-name { font-family:'Playfair Display',serif; font-size:13.5px; font-weight:700; margin:5px 0; color:#fff; }
+  .cycle-desc { font-size:12px; color:#9090aa; line-height:1.5; }
+  .exc-table { width:100%; border-collapse:collapse; margin-bottom:28px; }
+  .exc-table th { background:linear-gradient(90deg,#1a0a3a,#0a1a3a); color:#fff; font-family:'Playfair Display',serif; font-size:13px; padding:13px 16px; text-align:left; font-weight:700; border-bottom:2px solid var(--v4); }
+  .exc-table td { padding:12px 16px; font-size:13px; border-bottom:1px solid rgba(255,255,255,.06); vertical-align:top; color:#c0c0d8; }
+  .exc-table tr:nth-child(odd) td { background:rgba(255,255,255,.025); }
+  .exc-table td strong { color:#fff; }
+  .pill { display:inline-block; padding:2px 10px; border-radius:20px; font-size:11px; font-weight:600; }
+  .pill-r{background:rgba(255,107,107,.2);color:var(--v1);border:1px solid var(--v1)}
+  .pill-g{background:rgba(107,203,119,.2);color:var(--v3);border:1px solid var(--v3)}
+  .pill-y{background:rgba(255,217,61,.2);color:var(--v2);border:1px solid var(--v2)}
+  .wide-card { background:linear-gradient(135deg,#0a0d26,#0d1a0a); border:1.5px solid var(--v3); padding:28px 32px; margin-bottom:28px; }
+  .wide-card h3 { font-family:'Playfair Display',serif; font-size:19px; font-weight:700; margin-bottom:18px; color:var(--v3); }
+  .bullet-list { display:grid; grid-template-columns:1fr 1fr; gap:10px 36px; }
+  .bullet-item { display:flex; align-items:flex-start; gap:10px; font-size:13.5px; line-height:1.55; color:#b0c0b0; }
+  .bullet-dot { width:7px; height:7px; border-radius:50%; margin-top:6px; flex-shrink:0; }
+  .tcard { padding:24px; border:1.5px solid; }
+  .tc1{background:#140826;border-color:var(--v5)} .tc2{background:#08141a;border-color:var(--v4)}
+  .footer { border-top:1px solid var(--border); padding-top:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  .footer-quote { font-family:'Playfair Display',serif; font-size:14px; font-style:italic; color:var(--muted); }
+  .footer-names { display:flex; flex-wrap:wrap; gap:6px; justify-content:flex-end; }
+  .fname { font-size:11px; font-weight:600; padding:3px 10px; border-radius:20px; letter-spacing:.04em; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div>
+      <div class="header-label">Sociologia do Consumo</div>
+      <h1 class="header-title"><span class="c1">Consumo,</span><br><span class="c2">Identidade</span><br><span class="c3">&amp; Exclusão</span></h1>
+    </div>
+    <div class="names-box">
+      <div class="names-title">Elaborado por</div>
+      <div class="name-item"><div class="name-dot" style="background:var(--v1)"></div> André Borges Pereira</div>
+      <div class="name-item"><div class="name-dot" style="background:var(--v4)"></div> Álvaro Reis</div>
+      <div class="name-item"><div class="name-dot" style="background:var(--v3)"></div> Lucas Elias</div>
+      <div class="name-item"><div class="name-dot" style="background:var(--v5)"></div> Guilherme Albuquerque</div>
+      <div class="name-item"><div class="name-dot" style="background:var(--v6)"></div> Daniel Isaac</div>
+      <div class="name-item"><div class="name-dot" style="background:var(--v2)"></div> Lucas Zeidan</div>
+    </div>
+  </div>
+  <div class="intro">
+    <p>O que compramos não é apenas um ato econômico — é uma declaração de quem somos, onde pertencemos e quem fica de fora. O consumo é um campo de poder, desejo e distinção social.</p>
+  </div>
+  <div class="section-header"><div class="section-dot" style="background:var(--v1)"></div><h2>O Que É o Consumo de Identidade?</h2><div class="section-line"></div></div>
+  <div class="grid-3">
+    <div class="ccard cc1"><div class="ctag ctag1">Conceito</div><div class="ccard-title">Consumo como Linguagem</div><div class="ccard-body">Os bens funcionam como signos: comunicam status, valores e pertencimento a grupos sociais antes mesmo de qualquer palavra ser dita.</div></div>
+    <div class="ccard cc2"><div class="ctag ctag2">Teoria</div><div class="ccard-title">Distinção Social</div><div class="ccard-body">Para Pierre Bourdieu, o gosto não é natural — é socialmente construído. O habitus molda o que consumimos e como isso nos posiciona no espaço social.</div></div>
+    <div class="ccard cc3"><div class="ctag ctag3">Prática</div><div class="ccard-title">Tribos de Consumo</div><div class="ccard-body">Grupos se formam em torno de marcas, estilos e práticas. O consumo cria fronteiras simbólicas entre "nós" e "eles", incluindo e excluindo simultaneamente.</div></div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-cell"><div class="stat-num" style="color:var(--v1)">72%</div><div class="stat-label" style="color:var(--v1)">Identidade por marca</div><div class="stat-desc">Das pessoas afirmam que as marcas que consomem dizem quem elas são socialmente</div></div>
+    <div class="stat-cell"><div class="stat-num" style="color:var(--v2)">3x</div><div class="stat-label" style="color:var(--v2)">Barreira de classe</div><div class="stat-desc">A diferença de gasto em bens culturais entre classes alta e baixa no Brasil</div></div>
+    <div class="stat-cell"><div class="stat-num" style="color:var(--v4)">40%</div><div class="stat-label" style="color:var(--v4)">Exclusão digital</div><div class="stat-desc">Da população sem acesso pleno ao consumo digital — nova forma de exclusão social</div></div>
+  </div>
+  <div class="pyramid-wrap">
+    <div class="pyramid-title">Pirâmide da Distinção pelo Consumo</div>
+    <div class="pyramid">
+      <div class="pyramid-row"><div class="pyramid-label" style="color:#ff9090">Luxo extremo</div><div class="pyramid-bar pb1">Bens de Ostentação</div></div>
+      <div class="pyramid-row"><div class="pyramid-label" style="color:#cc99ff">Alta cultura</div><div class="pyramid-bar pb2">Capital Cultural</div></div>
+      <div class="pyramid-row"><div class="pyramid-label" style="color:#99ccff">Classe média</div><div class="pyramid-bar pb3">Consumo de Status</div></div>
+      <div class="pyramid-row"><div class="pyramid-label" style="color:#99ffbb">Subsistência</div><div class="pyramid-bar pb4">Necessidades Básicas</div></div>
+    </div>
+  </div>
+  <div class="section-header"><div class="section-dot" style="background:var(--v5)"></div><h2>Ciclo: Do Desejo à Exclusão</h2><div class="section-line"></div></div>
+  <div class="cycle">
+    <div class="cycle-step cs1"><div class="cycle-num cn1">01</div><div class="cycle-name">Desejo<br>Criado</div><div class="cycle-desc">Mídia e publicidade constroem necessidades e ideais de estilo de vida</div></div>
+    <div class="cycle-step cs2"><div class="cycle-num cn2">02</div><div class="cycle-name">Compra &amp;<br>Pertença</div><div class="cycle-desc">Consumir o produto sinaliza entrada em grupo desejado</div></div>
+    <div class="cycle-step cs3"><div class="cycle-num cn3">03</div><div class="cycle-name">Fronteira<br>Simbólica</div><div class="cycle-desc">Quem não acessa fica de fora do grupo, marcado como "outro"</div></div>
+    <div class="cycle-step cs4"><div class="cycle-num cn4">04</div><div class="cycle-name">Exclusão<br>Estrutural</div><div class="cycle-desc">Barreira econômica torna a exclusão sistemática e reproduzível</div></div>
+  </div>
+  <div class="section-header"><div class="section-dot" style="background:var(--v6)"></div><h2>Formas de Exclusão pelo Consumo</h2><div class="section-line"></div></div>
+  <table class="exc-table">
+    <thead><tr><th>Tipo de Exclusão</th><th>Mecanismo</th><th>Exemplo</th><th>Impacto</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Econômica</strong></td><td>Preço inacessível</td><td>Planos de saúde, ensino privado, moradia</td><td><span class="pill pill-r">Alta</span></td></tr>
+      <tr><td><strong>Simbólica</strong></td><td>Gostos e códigos de classe</td><td>Museus, teatros, vinhos finos</td><td><span class="pill pill-y">Média</span></td></tr>
+      <tr><td><strong>Digital</strong></td><td>Falta de acesso à tecnologia</td><td>Serviços bancários, educação online</td><td><span class="pill pill-r">Alta</span></td></tr>
+      <tr><td><strong>Racial/Étnica</strong></td><td>Preconceito no atendimento</td><td>Vigilância em lojas, crédito negado</td><td><span class="pill pill-r">Alta</span></td></tr>
+      <tr><td><strong>Geográfica</strong></td><td>Ausência de serviços em periferias</td><td>Sem agências bancárias, sem delivery</td><td><span class="pill pill-y">Média</span></td></tr>
+      <tr><td><strong>Cultural</strong></td><td>Desvalorização de gostos populares</td><td>Funk, artesanato, culinária regional</td><td><span class="pill pill-g">Baixa</span></td></tr>
+    </tbody>
+  </table>
+  <div class="section-header"><div class="section-dot" style="background:var(--v3)"></div><h2>Práticas de Resistência e Alternativas</h2><div class="section-line"></div></div>
+  <div class="wide-card">
+    <h3>Como Contestar a Lógica Excludente do Consumo</h3>
+    <div class="bullet-list">
+      <div class="bullet-item"><div class="bullet-dot" style="background:var(--v3)"></div><div>Consumo consciente e crítico à publicidade manipuladora</div></div>
+      <div class="bullet-item"><div class="bullet-dot" style="background:var(--v4)"></div><div>Economia solidária e comércio justo</div></div>
+      <div class="bullet-item"><div class="bullet-dot" style="background:var(--v5)"></div><div>Trocas, feiras e redes de doação comunitária</div></div>
+      <div class="bullet-item"><div class="bullet-dot" style="background:var(--v1)"></div><div>Valorização de marcas e produtores locais</div></div>
+      <div class="bullet-item"><div class="bullet-dot" style="background:var(--v6)"></div><div>Educação financeira como ferramenta de emancipação</div></div>
+      <div class="bullet-item"><div class="bullet-dot" style="background:var(--v2)"></div><div>Políticas públicas de inclusão digital e acesso</div></div>
+      <div class="bullet-item"><div class="bullet-dot" style="background:var(--v3)"></div><div>Reconhecimento da cultura popular como legítima</div></div>
+      <div class="bullet-item"><div class="bullet-dot" style="background:var(--v4)"></div><div>Cooperativas e bancos comunitários locais</div></div>
+    </div>
+  </div>
+  <div class="section-header"><div class="section-dot" style="background:var(--v2)"></div><h2>Referências Teóricas</h2><div class="section-line"></div></div>
+  <div class="grid-2">
+    <div class="tcard tc1"><div class="ctag ctag4">Sociólogo Francês</div><div class="ccard-title">Pierre Bourdieu</div><div class="ccard-body">Desenvolveu os conceitos de <em>habitus</em>, campo e capital para explicar como o gosto reproduz a hierarquia social. O consumo não é livre: é estruturado pela origem de classe.</div></div>
+    <div class="tcard tc2"><div class="ctag ctag2">Sociólogo Polonês</div><div class="ccard-title">Zygmunt Bauman</div><div class="ccard-body">Na "modernidade líquida", a identidade se torna um projeto de consumo permanente. Quem não pode consumir é tratado como "falha do sistema" — os novos pobres são os não-consumidores.</div></div>
+  </div>
+  <div class="footer">
+    <div class="footer-quote">O consumo sempre diz algo sobre poder.</div>
+    <div class="footer-names">
+      <span class="fname" style="background:rgba(255,107,107,.15);color:var(--v1);border:1px solid var(--v1)">André Borges Pereira</span>
+      <span class="fname" style="background:rgba(77,150,255,.15);color:var(--v4);border:1px solid var(--v4)">Álvaro Reis</span>
+      <span class="fname" style="background:rgba(107,203,119,.15);color:var(--v3);border:1px solid var(--v3)">Lucas Elias</span>
+      <span class="fname" style="background:rgba(255,146,43,.15);color:var(--v5);border:1px solid var(--v5)">Guilherme Albuquerque</span>
+      <span class="fname" style="background:rgba(204,93,232,.15);color:var(--v6);border:1px solid var(--v6)">Daniel Isaac</span>
+      <span class="fname" style="background:rgba(255,217,61,.15);color:var(--v2);border:1px solid var(--v2)">Lucas Zeidan</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
