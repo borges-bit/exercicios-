@@ -1,0 +1,253 @@
+Exercícios de PostgreSQL — DML (Níveis 1 e 2)
+Exercícios — Nível 1: Fundamentos (Exercícios 1 a 10)
+1. Primeiro INSERT
+INSERT INTO aluno (nome, idade) 
+
+VALUES ('Ana', 20);
+
+SELECT * FROM aluno;
+2. Dois registros
+INSERT INTO aluno (nome, idade) 
+
+VALUES ('Bruno', 19);
+
+INSERT INTO aluno (nome, idade) 
+
+VALUES ('Carlos', 22);
+
+SELECT * FROM aluno;
+3. Especificando colunas
+INSERT INTO cliente (nome, idade, cidade) 
+
+VALUES ('Maria', 31, 'Belo Horizonte');
+4. Texto e decimal
+INSERT INTO produto (nome, preco) 
+
+VALUES 
+
+    ('Teclado', 89.90),
+
+    ('Mouse', 49.90),
+
+    ('Monitor', 899.90);
+5. BOOLEAN
+INSERT INTO usuario (nome, ativo) 
+
+VALUES 
+
+    ('Ana', TRUE),
+
+    ('Bruno', TRUE),
+
+    ('Carlos', FALSE);
+6. DATE — Datas
+INSERT INTO pessoa (nome, nascimento) 
+
+VALUES 
+
+    ('Ana', '2000-03-15'),
+
+    ('Bruno', '1998-07-20'),
+
+    ('Carlos', '2005-12-02');
+7. Vários tipos juntos
+INSERT INTO funcionario (nome, idade, salario, ativo, nascimento) 
+
+VALUES ('João', 28, 2800.00, TRUE, '1997-05-10');
+8. INSERT errado — corrija
+Erros identificados:
+'trinta': Passado como texto em uma coluna INTEGER.
+'mil': Passado como texto em uma coluna NUMERIC.
+'sim': Passado como texto em uma coluna BOOLEAN (o correto é TRUE/FALSE).
+'amanhã': Passado como texto relativo em uma coluna DATE.
+
+INSERT INTO funcionario (nome, idade, salario, ativo, nascimento) 
+
+VALUES ('João', 30, 1000.00, TRUE, '2026-09-23');
+9. Quantidade de valores
+Explicação do erro: O comando declarou 2 colunas (nome, idade), mas forneceu apenas 1 valor na cláusula VALUES ('Maria').
+
+INSERT INTO aluno (nome, idade) 
+
+VALUES ('Maria', 21);
+10. Ordem dos valores
+O PostgreSQL aceita? Não. O PostgreSQL tentará inserir o número 50 na coluna nome e o texto 'Teclado' na coluna preco, gerando erro de tipo.
+
+INSERT INTO produto (nome, preco, quantidade) 
+
+VALUES ('Teclado', 50.00, 10);
+
+
+Exercícios — Nível 2: Múltiplos Registros (Exercícios 11 a 16)
+11 — Cinco produtos
+INSERT INTO produto (nome, preco, quantidade) 
+
+VALUES 
+
+    ('Teclado', 89.90, 15),
+
+    ('Mouse', 49.90, 30),
+
+    ('Monitor', 899.90, 5),
+
+    ('Headset', 159.90, 20),
+
+    ('Webcam', 229.90, 12);
+12 — Dez clientes
+CREATE TABLE cliente (
+
+    nome VARCHAR(100),
+
+    cidade VARCHAR(100),
+
+    idade INTEGER,
+
+    ativo BOOLEAN
+
+);
+
+INSERT INTO cliente (nome, cidade, idade, ativo) 
+
+VALUES 
+
+    ('Lucas Silva', 'Belo Horizonte', 28, TRUE),
+
+    ('Mariana Souza', 'São Paulo', 34, TRUE),
+
+    ('Pedro Santos', 'Rio de Janeiro', 19, FALSE),
+
+    ('Camila Lima', 'Curitiba', 42, TRUE),
+
+    ('Gabriel Rocha', 'Porto Alegre', 25, FALSE),
+
+    ('Beatriz Alves', 'Salvador', 31, TRUE),
+
+    ('Rafael Costa', 'Brasília', 22, TRUE),
+
+    ('Juliana Dias', 'Fortaleza', 29, FALSE),
+
+    ('Thiago Martins', 'Recife', 37, TRUE),
+
+    ('Fernanda Ribeiro', 'Manaus', 26, TRUE);
+13 — Dez pedidos
+CREATE TABLE pedido (
+
+    numero_pedido SERIAL,
+
+    cliente VARCHAR(100),
+
+    valor NUMERIC(10, 2),
+
+    data_pedido DATE,
+
+    pago BOOLEAN
+
+);
+
+INSERT INTO pedido (cliente, valor, data_pedido, pago) 
+
+VALUES 
+
+    ('Lucas Silva', 150.00, '2026-09-01', TRUE),
+
+    ('Mariana Souza', 89.90, '2026-09-02', TRUE),
+
+    ('Pedro Santos', 450.50, '2026-09-03', FALSE),
+
+    ('Camila Lima', 1200.00, '2026-09-04', TRUE),
+
+    ('Gabriel Rocha', 75.20, '2026-09-05', FALSE),
+
+    ('Beatriz Alves', 310.00, '2026-09-06', TRUE),
+
+    ('Rafael Costa', 99.90, '2026-09-07', FALSE),
+
+    ('Juliana Dias', 500.00, '2026-09-08', TRUE),
+
+    ('Thiago Martins', 230.80, '2026-09-09', TRUE),
+
+    ('Fernanda Ribeiro', '1050.00', '2026-09-10', FALSE);
+14 — NULL correto
+INSERT INTO cliente (nome, telefone, email) 
+
+VALUES 
+
+    ('Carlos Eduardo', '31999998888', 'carlos@email.com'),
+
+    ('Vanessa Mendes', NULL, 'vanessa@email.com'),
+
+    ('Roberto Lima', '11988887777', NULL),
+
+    ('Amanda Silveira', NULL, 'amanda@email.com'),
+
+    ('Diego Ferreira', '21977776666', 'diego@email.com');
+15 — Datas e horários
+INSERT INTO atendimento (cliente, data_atendimento, horario, confirmado) 
+
+VALUES 
+
+    ('Lucas Silva', '2026-09-15', '09:30:00', TRUE),
+
+    ('Mariana Souza', '2026-09-15', '10:00:00', TRUE),
+
+    ('Pedro Santos', '2026-09-15', '10:30:00', FALSE),
+
+    ('Camila Lima', '2026-09-16', '11:00:00', TRUE),
+
+    ('Gabriel Rocha', '2026-09-16', '14:00:00', FALSE),
+
+    ('Beatriz Alves', '2026-09-16', '14:30:00', TRUE),
+
+    ('Rafael Costa', '2026-09-17', '15:00:00', TRUE),
+
+    ('Juliana Dias', '2026-09-17', '15:30:00', FALSE),
+
+    ('Thiago Martins', '2026-09-18', '16:00:00', TRUE),
+
+    ('Fernanda Ribeiro', '2026-09-18', '16:30:00', TRUE);
+16 — Massa de dados
+INSERT INTO produto (nome, categoria, preco, quantidade, disponivel) 
+
+VALUES 
+
+    ('Teclado Mecânico', 'Periféricos', 250.00, 15, TRUE),
+
+    ('Mouse Gamer', 'Periféricos', 120.00, 30, TRUE),
+
+    ('Monitor 24"', 'Monitores', 899.90, 8, TRUE),
+
+    ('Monitor 27"', 'Monitores', 1450.00, 0, FALSE),
+
+    ('Headset 7.1', 'Áudio', 320.00, 12, TRUE),
+
+    ('Caixa de Som USB', 'Áudio', 85.00, 25, TRUE),
+
+    ('Microfone Condensador', 'Áudio', 210.00, 5, TRUE),
+
+    ('Webcam Full HD', 'Periféricos', 199.90, 18, TRUE),
+
+    ('Mousepad Extra Grande', 'Acessórios', 45.00, 50, TRUE),
+
+    ('Suporte para Monitor', 'Acessórios', 110.00, 20, TRUE),
+
+    ('Cadeira Gamer', 'Móveis', 1200.00, 4, TRUE),
+
+    ('Mesa Digitalizadora', 'Periféricos', 350.00, 0, FALSE),
+
+    ('HD Externo 1TB', 'Armazenamento', 310.00, 10, TRUE),
+
+    ('SSD 512GB', 'Armazenamento', 240.00, 22, TRUE),
+
+    ('Pendrive 64GB', 'Armazenamento', 35.00, 40, TRUE),
+
+    ('Cabo HDMI 2m', 'Acessórios', 25.00, 60, TRUE),
+
+    ('Hub USB 3.0', 'Acessórios', 65.00, 14, TRUE),
+
+    ('Filtro de Linha', 'Energia', 55.00, 30, TRUE),
+
+    ('Nobreak 600VA', 'Energia', 480.00, 3, TRUE),
+
+    ('Roteador Wi-Fi 6', 'Redes', 380.00, 9, TRUE),
+
+    ('Switch 8 Portas', 'Redes', 115.00, 0, FALSE);
